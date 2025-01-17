@@ -8,7 +8,6 @@ interface NavbarProps {
 }
 
 export default function Navbar({ session }: NavbarProps) {
-  console.log("Current session:", session);
   
   const [dropdowns] = useState([
     { id: 1, title: '菜单1', items: ['选项1', '选项2', '选项3'] },

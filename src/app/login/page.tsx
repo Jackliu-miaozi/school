@@ -19,7 +19,7 @@ export default function LoginPage() {
       const result = await signIn("credentials", {
         email: formData.email,
         password: formData.password,
-        redirect: true,
+        redirect: false,
         callbackUrl: "/"
       });
 
@@ -29,7 +29,6 @@ export default function LoginPage() {
         setError("登录失败");
       } else {
         router.push("/");
-        router.refresh();
       }
     } catch (error) {
       console.error("Login error:", error);
