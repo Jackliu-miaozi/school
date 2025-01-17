@@ -85,6 +85,9 @@ export const createTRPCRouter = t.router;
  * network latency that would occur in production but not in local development.
  */
 const timingMiddleware = t.middleware(async ({ next, path }) => {
+  //{next,path}对中间件上下文的解构
+  //不需要使用不需要通过 context.next, context.path 访问
+  //这种写法比较简洁
   const start = Date.now();
 
   if (t._config.isDev) {
@@ -94,10 +97,11 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   }
 
   const result = await next();
+  //next表示执行下一个中间件或者执行最终的api处理程序
 
   const end = Date.now();
   console.log(`[TRPC] ${path} took ${end - start}ms to execute`);
-
+  //path表示当前请求的路径user.getProfile took 123ms to execute或post.create 
   return result;
 });
 
@@ -109,6 +113,9 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
+//t.procedure 创建一个tRPC procedure
+//.use(timingMiddleware) 将timingMiddleware中间件应用到procedure
+//使用timingMiddleware中间件，可以测量每个procedure的执行时间
 
 /**
  * Protected (authenticated) procedure
@@ -122,6 +129,7 @@ export const protectedProcedure = t.procedure
   .use(timingMiddleware)
   .use(({ ctx, next }) => {
     if (!ctx.session || !ctx.session.user) {
+      //上下文中已经包含了session所以可以用来新建一个protectedProcedure
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     return next({
@@ -129,5 +137,7 @@ export const protectedProcedure = t.procedure
         // infers the `session` as non-nullable
         session: { ...ctx.session, user: ctx.session.user },
       },
+      //重构ctx，以便在后续可以安全的使用user
+      //...ctx是展开所有的session项
     });
   });
