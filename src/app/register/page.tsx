@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { api } from '@/trpc/react';
 import Link from 'next/link';
 
 export default function RegisterPage() {
@@ -56,6 +57,14 @@ export default function RegisterPage() {
     }
     return true;
   };
+  const registerMutation = api.register.register.useMutation({
+    onSuccess: () => {
+      router.push('/login');
+    },
+    onError: (error) => {
+      setError(error.message);
+    },
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,22 +77,9 @@ export default function RegisterPage() {
       return;
     }
     try {
-      const res = await fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (res.ok) {
-        router.push('/api/auth/signin');
-      } else {
-        const data = (await res.json()) as { error: string };
-        setError(data.error || '注册失败');
-      }
+      registerMutation.mutate(formData);
     } catch (error) {
-      console.error(error);
+      setError(error as string);
     }
   };
 

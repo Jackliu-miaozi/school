@@ -28,12 +28,7 @@ export default function Navbar() {
           {/* Logo 区域 */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center gap-2">
-              <Image 
-                src="/logo.png"
-                alt="青州一中"
-                width={40}
-                height={40}
-              />
+              <Image src="/logo.png" alt="青州一中" width={40} height={40} />
               <span className="text-2xl font-bold text-white">青州一中</span>
             </Link>
           </div>
