@@ -69,7 +69,7 @@ export default function Navbar() {
                   进入后台
                 </Link>
                 <Link
-                  href="/api/auth/signout"
+                  href="/logout"
                   className="rounded-md px-3 py-2 text-sm font-medium text-white hover:text-gray-300"
                 >
                   退出登录
