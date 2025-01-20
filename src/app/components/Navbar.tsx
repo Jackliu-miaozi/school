@@ -2,9 +2,17 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 
 export default function Navbar() {
   const { data: session } = useSession();
+  //和const session = await auth() 效果一样
+  //但是useSession() 是客户端组件
+  //useSession() 返回一个包含 session 和 status 的对象
+  //session 是当前用户的会话数据，如果用户未登录，则 session 为 null
+  //status 是会话的状态，可以是 "authenticated"（已登录）、"loading"（正在加载）或 "unauthenticated"（未登录）
+  //useSession() 是客户端组件，所以不能在服务器端使用
+  //auth（）是服务器端组件，所以可以在服务器端使用
   const [dropdowns] = useState([
     { id: 1, title: '菜单1', items: ['选项1', '选项2', '选项3'] },
     { id: 2, title: '菜单2', items: ['选项1', '选项2', '选项3'] },
@@ -19,8 +27,14 @@ export default function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo 区域 */}
           <div className="flex-shrink-0">
-            <Link href="/" className="text-2xl font-bold text-white">
-              LOGO
+            <Link href="/" className="flex items-center gap-2">
+              <Image 
+                src="/logo.png"
+                alt="青州一中"
+                width={40}
+                height={40}
+              />
+              <span className="text-2xl font-bold text-white">青州一中</span>
             </Link>
           </div>
 

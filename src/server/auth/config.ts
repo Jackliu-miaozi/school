@@ -99,7 +99,8 @@ export const authConfig = {
   },
   session: {
     strategy: 'jwt',
-
+    //也可以使用数据库策略
+    //但是如果是oauth和credentials共存的话建议使用jwt
     maxAge: 24 * 60 * 60, // 24小时，单位是秒
   },
 
