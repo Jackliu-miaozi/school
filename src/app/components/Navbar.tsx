@@ -1,14 +1,10 @@
 "use client";
 import { useState } from 'react';
 import Link from 'next/link';
-import type { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 
-interface NavbarProps {
-  session: Session | null;
-}
-
-export default function Navbar({ session }: NavbarProps) {
-  
+export default function Navbar() {
+  const { data: session } = useSession();
   const [dropdowns] = useState([
     { id: 1, title: '菜单1', items: ['选项1', '选项2', '选项3'] },
     { id: 2, title: '菜单2', items: ['选项1', '选项2', '选项3'] },
