@@ -19,6 +19,8 @@ declare module "next-auth" {
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
+    //DefaultSession 是 next-auth 提供的默认 session 类型
+    //使session拓展了DefaultSession的user属性
   }
 
   // interface User {
@@ -42,30 +44,36 @@ export const authConfig = {
       name: "credentials",
       credentials: {
         email: { 
-          label: "邮箱", 
-          type: "email", 
-          autocomplete: "username" 
+          label: "Email", 
+          type: "text", 
         },
         password: { 
-          label: "密码", 
+          label: "Password", 
           type: "password", 
-          autocomplete: "current-password" 
         }
       },
       async authorize(credentials) {
         const parsedCredentials = z
           .object({ email: z.string().email(), password: z.string().min(6) })
+          //验证是否为有效的邮件格式
+          //验证密码是否至少为6个字符
           .safeParse(credentials);
-
+          //如果验证成功parsedCredentials.success为true 的值将为true否则将为false
         if (!parsedCredentials.success) return null;
 
         const { email, password } = parsedCredentials.data;
+
+        //使用parsedCredentials.data可以得到验证后的数据
         const user = await db.user.findUnique({ where: { email } });
+        //使用await db.user.findUnique({ where: { email } }) 查询数据库中是否存在具有给定电子邮件的用户
+        //如果用户存在，则将用户数据存储在user变量中
+        //如果用户不存在，则将user设置为null
         if (!user?.password) return null;
+        //如果用户不存在密码，则返回null
 
         const passwordsMatch = await bcrypt.compare(password, user.password);
         if (!passwordsMatch) return null;
-
+        //如果密码不匹配，则返回null
         return {
           id: user.id,
           name: user.name,
@@ -88,5 +96,8 @@ export const authConfig = {
       }
       return session;
     },
+  },
+  session:{
+    strategy: "jwt",
   },
 } satisfies NextAuthConfig;

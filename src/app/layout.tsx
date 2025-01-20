@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-
+import { SessionProvider } from "next-auth/react";
 import { TRPCReactProvider } from "@/trpc/react";
 import { auth } from "@/server/auth";
 import Navbar from "@/app/components/Navbar";
@@ -19,14 +19,16 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  
+
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <TRPCReactProvider>
-          <Navbar session={session} />
-          {children}
-        </TRPCReactProvider>
+        <SessionProvider session={session}>
+          <TRPCReactProvider>
+            <Navbar session={session} />
+            {children}
+          </TRPCReactProvider>
+        </SessionProvider>
       </body>
     </html>
   );
