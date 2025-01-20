@@ -1,38 +1,38 @@
-"use client";
+'use client';
 
-import { signIn } from "next-auth/react";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { signIn } from 'next-auth/react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const result = await signIn("credentials", {
+      const result = await signIn('credentials', {
         email: formData.email,
         password: formData.password,
         redirect: false,
-        callbackUrl: "/"
+        callbackUrl: '/',
       });
 
-      console.log("Login result:", result);
+      console.log('Login result:', result);
 
       if (result?.error) {
-        setError("登录失败");
+        setError('登录失败');
       } else {
-        router.push("/");
+        router.push('/');
       }
     } catch (error) {
-      console.error("Login error:", error);
-      setError("登录失败");
+      console.error('Login error:', error);
+      setError('登录失败');
     }
   };
 
@@ -44,9 +44,7 @@ export default function LoginPage() {
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="rounded-md bg-red-500 p-3 text-white">
-              {error}
-            </div>
+            <div className="rounded-md bg-red-500 p-3 text-white">{error}</div>
           )}
           <div className="space-y-4 rounded-md shadow-sm">
             <div>
@@ -107,4 +105,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-} 
+}

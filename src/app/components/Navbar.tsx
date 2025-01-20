@@ -1,7 +1,7 @@
-"use client";
+'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { useSession } from "next-auth/react";
+import { useSession } from 'next-auth/react';
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -14,25 +14,25 @@ export default function Navbar() {
   ]);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white/10 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+    <nav className="fixed left-0 right-0 top-0 bg-white/10 backdrop-blur-sm">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo 区域 */}
           <div className="flex-shrink-0">
-            <Link href="/" className="text-white text-2xl font-bold">
+            <Link href="/" className="text-2xl font-bold text-white">
               LOGO
             </Link>
           </div>
 
           {/* 导航菜单区域 */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden space-x-8 md:flex">
             {dropdowns.map((dropdown) => (
-              <div key={dropdown.id} className="relative group">
-                <button className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">
+              <div key={dropdown.id} className="group relative">
+                <button className="px-3 py-2 text-sm font-medium text-white hover:text-gray-300">
                   {dropdown.title}
                 </button>
                 {/* 下拉菜单 */}
-                <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                <div className="invisible absolute left-0 mt-2 w-48 rounded-md bg-white opacity-0 shadow-lg ring-1 ring-black ring-opacity-5 transition-all duration-300 group-hover:visible group-hover:opacity-100">
                   <div className="py-1">
                     {dropdown.items.map((item, index) => (
                       <a
@@ -55,13 +55,13 @@ export default function Navbar() {
               <>
                 <Link
                   href="/dashboard"
-                  className="bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="rounded-md bg-white/10 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
                 >
                   进入后台
                 </Link>
                 <Link
                   href="/api/auth/signout"
-                  className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-white hover:text-gray-300"
                 >
                   退出登录
                 </Link>
@@ -70,13 +70,13 @@ export default function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-white hover:text-gray-300"
                 >
                   登录
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="rounded-md bg-white/10 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
                 >
                   注册
                 </Link>
@@ -87,4 +87,4 @@ export default function Navbar() {
       </div>
     </nav>
   );
-} 
+}

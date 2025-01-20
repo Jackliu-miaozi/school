@@ -1,0 +1,30 @@
+# 环境变量文件
+.env
+.env.*
+.env-*
+
+# 配置文件
+.eslintrc.cjs
+.eslintrc.js
+.eslintrc
+prettier.config.js
+prettier.config.mjs
+next.config.js
+next.config.mjs
+postcss.config.js
+tailwind.config.js
+tsconfig.json
+
+# 其他常见需要忽略的文件
+node_modules
+.next
+build
+dist
+pnpm-lock.yaml
+package-lock.json
+yarn.lock 
+
+# 系统和版本控制文件
+.gitignore
+.git
+.DS_Store 

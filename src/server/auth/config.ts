@@ -1,10 +1,10 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { type DefaultSession, type NextAuthConfig } from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import { z } from "zod";
-import bcrypt from "bcryptjs";
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import { type DefaultSession, type NextAuthConfig } from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
+import { z } from 'zod';
+import bcrypt from 'bcryptjs';
 
-import { db } from "@/server/db";
+import { db } from '@/server/db';
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -12,13 +12,13 @@ import { db } from "@/server/db";
  *
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session extends DefaultSession {
     user: {
       id: string;
       // ...other properties
       // role: UserRole;
-    } & DefaultSession["user"];
+    } & DefaultSession['user'];
     //DefaultSession 是 next-auth 提供的默认 session 类型
     //使session拓展了DefaultSession的user属性
   }
@@ -36,21 +36,21 @@ declare module "next-auth" {
  */
 export const authConfig = {
   pages: {
-    signIn: '/login',  // 自定义登录页面路径
+    signIn: '/login', // 自定义登录页面路径
   },
   adapter: PrismaAdapter(db),
   providers: [
     Credentials({
-      name: "credentials",
+      name: 'credentials',
       credentials: {
-        email: { 
-          label: "Email", 
-          type: "text", 
+        email: {
+          label: 'Email',
+          type: 'text',
         },
-        password: { 
-          label: "Password", 
-          type: "password", 
-        }
+        password: {
+          label: 'Password',
+          type: 'password',
+        },
       },
       async authorize(credentials) {
         const parsedCredentials = z
@@ -58,7 +58,7 @@ export const authConfig = {
           //验证是否为有效的邮件格式
           //验证密码是否至少为6个字符
           .safeParse(credentials);
-          //如果验证成功parsedCredentials.success为true 的值将为true否则将为false
+        //如果验证成功parsedCredentials.success为true 的值将为true否则将为false
         if (!parsedCredentials.success) return null;
 
         const { email, password } = parsedCredentials.data;
@@ -80,8 +80,8 @@ export const authConfig = {
           email: user.email,
           image: user.image,
         };
-      }
-    })
+      },
+    }),
   ],
   callbacks: {
     async jwt({ token, user }) {
@@ -97,7 +97,13 @@ export const authConfig = {
       return session;
     },
   },
-  session:{
-    strategy: "jwt",
+  session: {
+    strategy: 'jwt',
+
+    maxAge: 24 * 60 * 60, // 24小时，单位是秒
+  },
+
+  jwt: {
+    maxAge: 60 * 60, // JWT token过期时间
   },
 } satisfies NextAuthConfig;

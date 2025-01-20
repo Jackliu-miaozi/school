@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function RegisterPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
   });
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [passwordChecks, setPasswordChecks] = useState({
     minLength: false,
     hasUpperCase: false,
@@ -29,13 +29,13 @@ export default function RegisterPage() {
     const hasNumbers = /\d/.test(password);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-    if (password.length < minLength) return "密码长度至少8位";
-    if (!hasUpperCase) return "密码需要包含大写字母";
-    if (!hasLowerCase) return "密码需要包含小写字母";
-    if (!hasNumbers) return "密码需要包含数字";
-    if (!hasSpecialChar) return "密码需要包含特殊字符";
-    
-    return "";
+    if (password.length < minLength) return '密码长度至少8位';
+    if (!hasUpperCase) return '密码需要包含大写字母';
+    if (!hasLowerCase) return '密码需要包含小写字母';
+    if (!hasNumbers) return '密码需要包含数字';
+    if (!hasSpecialChar) return '密码需要包含特殊字符';
+
+    return '';
   };
 
   const checkPasswordStrength = (password: string) => {
@@ -45,13 +45,13 @@ export default function RegisterPage() {
       hasLowerCase: /[a-z]/.test(password),
       hasNumbers: /\d/.test(password),
       hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
-      passwordsMatch: password === formData.confirmPassword && password !== "",
+      passwordsMatch: password === formData.confirmPassword && password !== '',
     });
   };
 
   const validatePasswords = () => {
     if (formData.password !== formData.confirmPassword) {
-      setError("两次输入的密码不一致");
+      setError('两次输入的密码不一致');
       return false;
     }
     return true;
@@ -68,19 +68,19 @@ export default function RegisterPage() {
       return;
     }
     try {
-      const res = await fetch("/api/register", {
-        method: "POST",
+      const res = await fetch('/api/register', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
 
       if (res.ok) {
-        router.push("/api/auth/signin");
+        router.push('/api/auth/signin');
       } else {
         const data = (await res.json()) as { error: string };
-        setError(data.error || "注册失败");
+        setError(data.error || '注册失败');
       }
     } catch (error) {
       console.error(error);
@@ -93,11 +93,13 @@ export default function RegisterPage() {
         <div>
           <h2 className="text-center text-3xl font-bold">注册账号</h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit} autoComplete="on">
+        <form
+          className="mt-8 space-y-6"
+          onSubmit={handleSubmit}
+          autoComplete="on"
+        >
           {error && (
-            <div className="rounded-md bg-red-500 p-3 text-white">
-              {error}
-            </div>
+            <div className="rounded-md bg-red-500 p-3 text-white">{error}</div>
           )}
           <div className="space-y-4 rounded-md shadow-sm">
             <div>
@@ -156,35 +158,59 @@ export default function RegisterPage() {
               />
               <div className="mt-1 text-sm">
                 <ul className="grid grid-cols-2 gap-x-4 gap-y-1">
-                  <li className={`flex items-center gap-2 ${
-                    passwordChecks.minLength ? "text-green-400" : "text-gray-300"
-                  }`}>
-                    {passwordChecks.minLength ? "✓" : "○"} 至少8位字符
+                  <li
+                    className={`flex items-center gap-2 ${
+                      passwordChecks.minLength
+                        ? 'text-green-400'
+                        : 'text-gray-300'
+                    }`}
+                  >
+                    {passwordChecks.minLength ? '✓' : '○'} 至少8位字符
                   </li>
-                  <li className={`flex items-center gap-2 ${
-                    passwordChecks.hasUpperCase ? "text-green-400" : "text-gray-300"
-                  }`}>
-                    {passwordChecks.hasUpperCase ? "✓" : "○"} 包含大写字母
+                  <li
+                    className={`flex items-center gap-2 ${
+                      passwordChecks.hasUpperCase
+                        ? 'text-green-400'
+                        : 'text-gray-300'
+                    }`}
+                  >
+                    {passwordChecks.hasUpperCase ? '✓' : '○'} 包含大写字母
                   </li>
-                  <li className={`flex items-center gap-2 ${
-                    passwordChecks.hasLowerCase ? "text-green-400" : "text-gray-300"
-                  }`}>
-                    {passwordChecks.hasLowerCase ? "✓" : "○"} 包含小写字母
+                  <li
+                    className={`flex items-center gap-2 ${
+                      passwordChecks.hasLowerCase
+                        ? 'text-green-400'
+                        : 'text-gray-300'
+                    }`}
+                  >
+                    {passwordChecks.hasLowerCase ? '✓' : '○'} 包含小写字母
                   </li>
-                  <li className={`flex items-center gap-2 ${
-                    passwordChecks.hasNumbers ? "text-green-400" : "text-gray-300"
-                  }`}>
-                    {passwordChecks.hasNumbers ? "✓" : "○"} 包含数字
+                  <li
+                    className={`flex items-center gap-2 ${
+                      passwordChecks.hasNumbers
+                        ? 'text-green-400'
+                        : 'text-gray-300'
+                    }`}
+                  >
+                    {passwordChecks.hasNumbers ? '✓' : '○'} 包含数字
                   </li>
-                  <li className={`flex items-center gap-2 ${
-                    passwordChecks.hasSpecialChar ? "text-green-400" : "text-gray-300"
-                  }`}>
-                    {passwordChecks.hasSpecialChar ? "✓" : "○"} 包含特殊字符
+                  <li
+                    className={`flex items-center gap-2 ${
+                      passwordChecks.hasSpecialChar
+                        ? 'text-green-400'
+                        : 'text-gray-300'
+                    }`}
+                  >
+                    {passwordChecks.hasSpecialChar ? '✓' : '○'} 包含特殊字符
                   </li>
-                  <li className={`flex items-center gap-2 ${
-                    passwordChecks.passwordsMatch ? "text-green-400" : "text-gray-300"
-                  }`}>
-                    {passwordChecks.passwordsMatch ? "✓" : "○"} 两次密码输入一致
+                  <li
+                    className={`flex items-center gap-2 ${
+                      passwordChecks.passwordsMatch
+                        ? 'text-green-400'
+                        : 'text-gray-300'
+                    }`}
+                  >
+                    {passwordChecks.passwordsMatch ? '✓' : '○'} 两次密码输入一致
                   </li>
                 </ul>
               </div>
@@ -204,18 +230,24 @@ export default function RegisterPage() {
                 value={formData.confirmPassword}
                 onChange={(e) => {
                   const newConfirmPassword = e.target.value;
-                  setFormData({ ...formData, confirmPassword: newConfirmPassword });
-                  setPasswordChecks(prev => ({
+                  setFormData({
+                    ...formData,
+                    confirmPassword: newConfirmPassword,
+                  });
+                  setPasswordChecks((prev) => ({
                     ...prev,
-                    passwordsMatch: formData.password === newConfirmPassword && formData.password !== ""
+                    passwordsMatch:
+                      formData.password === newConfirmPassword &&
+                      formData.password !== '',
                   }));
                 }}
               />
-              {formData.confirmPassword && formData.password !== formData.confirmPassword && (
-                <p className="mt-1 text-sm text-red-400">
-                  两次输入的密码不一致
-                </p>
-              )}
+              {formData.confirmPassword &&
+                formData.password !== formData.confirmPassword && (
+                  <p className="mt-1 text-sm text-red-400">
+                    两次输入的密码不一致
+                  </p>
+                )}
             </div>
           </div>
 
@@ -239,4 +271,4 @@ export default function RegisterPage() {
       </div>
     </div>
   );
-} 
+}

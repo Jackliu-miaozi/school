@@ -7,12 +7,12 @@
  * need to use are documented accordingly near the end.
  */
 
-import { initTRPC, TRPCError } from "@trpc/server";
-import superjson from "superjson";
-import { ZodError } from "zod";
+import { initTRPC, TRPCError } from '@trpc/server';
+import superjson from 'superjson';
+import { ZodError } from 'zod';
 
-import { auth } from "@/server/auth";
-import { db } from "@/server/db";
+import { auth } from '@/server/auth';
+import { db } from '@/server/db';
 
 /**
  * 1. CONTEXT
@@ -101,7 +101,7 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 
   const end = Date.now();
   console.log(`[TRPC] ${path} took ${end - start}ms to execute`);
-  //path表示当前请求的路径user.getProfile took 123ms to execute或post.create 
+  //path表示当前请求的路径user.getProfile took 123ms to execute或post.create
   return result;
 });
 
@@ -130,7 +130,7 @@ export const protectedProcedure = t.procedure
   .use(({ ctx, next }) => {
     if (!ctx.session || !ctx.session.user) {
       //上下文中已经包含了session所以可以用来新建一个protectedProcedure
-      throw new TRPCError({ code: "UNAUTHORIZED" });
+      throw new TRPCError({ code: 'UNAUTHORIZED' });
     }
     return next({
       ctx: {
