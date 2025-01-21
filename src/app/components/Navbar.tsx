@@ -13,13 +13,7 @@ export default function Navbar() {
   //status 是会话的状态，可以是 "authenticated"（已登录）、"loading"（正在加载）或 "unauthenticated"（未登录）
   //useSession() 是客户端组件，所以不能在服务器端使用
   //auth（）是服务器端组件，所以可以在服务器端使用
-  const [dropdowns] = useState([
-    { id: 1, title: '菜单1', items: ['选项1', '选项2', '选项3'] },
-    { id: 2, title: '菜单2', items: ['选项1', '选项2', '选项3'] },
-    { id: 3, title: '菜单3', items: ['选项1', '选项2', '选项3'] },
-    { id: 4, title: '菜单4', items: ['选项1', '选项2', '选项3'] },
-    { id: 5, title: '菜单5', items: ['选项1', '选项2', '选项3'] },
-  ]);
+
 
   return (
     <nav className="fixed left-0 right-0 top-0 bg-white/10 backdrop-blur-sm">
@@ -35,27 +29,18 @@ export default function Navbar() {
 
           {/* 导航菜单区域 */}
           <div className="hidden space-x-8 md:flex">
-            {dropdowns.map((dropdown) => (
-              <div key={dropdown.id} className="group relative">
-                <button className="px-3 py-2 text-sm font-medium text-white hover:text-gray-300">
-                  {dropdown.title}
-                </button>
-                {/* 下拉菜单 */}
-                <div className="invisible absolute left-0 mt-2 w-48 rounded-md bg-white opacity-0 shadow-lg ring-1 ring-black ring-opacity-5 transition-all duration-300 group-hover:visible group-hover:opacity-100">
-                  <div className="py-1">
-                    {dropdown.items.map((item, index) => (
-                      <a
-                        key={index}
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        {item}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
+            <Link href="/news" className="text-white hover:text-gray-300">
+              校内新闻
+            </Link>
+            <Link href="/notice" className="text-white hover:text-gray-300">
+              学校公告
+            </Link>
+            <Link href="/forum" className="text-white hover:text-gray-300">
+              教育论坛
+            </Link>
+            <Link href="/education" className="text-white hover:text-gray-300">
+              教务信息
+            </Link>
           </div>
 
           {/* 登录注册按钮区域 */}
