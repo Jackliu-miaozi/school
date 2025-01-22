@@ -1,9 +1,8 @@
 'use client';
-import { useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-
+import { usePathname } from 'next/navigation';
 export default function Navbar() {
   const { data: session } = useSession();
   //和const session = await auth() 效果一样
@@ -13,10 +12,10 @@ export default function Navbar() {
   //status 是会话的状态，可以是 "authenticated"（已登录）、"loading"（正在加载）或 "unauthenticated"（未登录）
   //useSession() 是客户端组件，所以不能在服务器端使用
   //auth（）是服务器端组件，所以可以在服务器端使用
-
+  const pathname = usePathname();
 
   return (
-    <nav className="fixed left-0 right-0 top-0 bg-white/10 backdrop-blur-sm">
+    <nav className="relative left-0 right-0 top-0 bg-gray-900 backdrop-blur-sm">
       <div className="mx-auto max-w-7xl px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo 区域 */}
@@ -29,16 +28,44 @@ export default function Navbar() {
 
           {/* 导航菜单区域 */}
           <div className="hidden space-x-8 md:flex">
-            <Link href="/news" className="text-white hover:text-gray-300">
+            <Link
+              href="/news"
+              className={`${
+                pathname === '/news'
+                  ? 'text-lg font-semibold text-white'
+                  : 'text-gray-300 hover:text-white'
+              }`}
+            >
               校内新闻
             </Link>
-            <Link href="/notice" className="text-white hover:text-gray-300">
+            <Link
+              href="/notice"
+              className={`${
+                pathname === '/notice'
+                  ? 'text-lg font-semibold text-white'
+                  : 'text-gray-300 hover:text-white'
+              }`}
+            >
               学校公告
             </Link>
-            <Link href="/forum" className="text-white hover:text-gray-300">
+            <Link
+              href="/forum"
+              className={`${
+                pathname === '/forum'
+                  ? 'text-lg font-semibold text-white'
+                  : 'text-gray-300 hover:text-white'
+              }`}
+            >
               教育论坛
             </Link>
-            <Link href="/education" className="text-white hover:text-gray-300">
+            <Link
+              href="/education"
+              className={`${
+                pathname === '/education'
+                  ? 'text-lg font-semibold text-white'
+                  : 'text-gray-300 hover:text-white'
+              }`}
+            >
               教务信息
             </Link>
           </div>

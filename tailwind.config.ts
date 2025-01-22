@@ -15,12 +15,10 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    daisyui,
-  ],
+  plugins: [daisyui],
   daisyui: {
-    themes: ["light", "dark"], // 可以添加更多主题
-  }
+    themes: ['light', 'dark'], // 可以添加更多主题
+  },
 };
 
 export default config;
