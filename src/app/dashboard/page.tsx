@@ -3,10 +3,9 @@
 //在（dashboard）中的components文件不参与路由，与根components文件不冲突
 import { redirect } from 'next/navigation';
 import { auth } from '@/server/auth';
-import PostsNumber from '../components/postsNumber';
-import UserStatus from '../components/userStatus';
-import RecentActivity from '../components/recentActivity';
-import { Suspense } from 'react';
+import PostsNumber from './components/postsNumber';
+import UserStatus from './components/userStatus';
+import RecentActivity from './components/recentActivity';
 
 export default async function DashboardPage() {
   const session = await auth();
