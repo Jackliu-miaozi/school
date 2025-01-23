@@ -1,21 +1,44 @@
 import '@/styles/globals.css';
-import { auth } from '@/server/auth';
+
+import { GeistSans } from 'geist/font/sans';
+import { type Metadata } from 'next';
 import { SessionProvider } from 'next-auth/react';
-import { redirect } from 'next/navigation';
-export default async function DashboardLayout({
+import { TRPCReactProvider } from '@/trpc/react';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { ConfigProvider } from 'antd';
+import darkTheme from '@/theme/darkTheme';
+import defaultTheme from '@/theme/themeConfig';
+import { auth } from '@/server/auth';
+
+export const metadata: Metadata = {
+  title: '青州一中',
+  description: '青州一中',
+  icons: [{ rel: 'icon', url: '/favicon.ico' }],
+};
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const isDarkMode = 0;
   const session = await auth();
-  if (!session) {
-    redirect('/login')
-  }
-  return <SessionProvider session={session}>{children}</SessionProvider>;
-  //children本身并不接受参数
-  //所以 children 本身并不直接接收 session，而是通过 Context API 的方式来访问 session 数据。
-  //SessionProvider 的作用是创建一个上下文，使得所有子组件都能访问到 session 信息
-  //children可以使用useSession来获取这个上下文信息，也就是说children只能是静态的了。
-  //如果需要动态的页面，需要使用client component
-  //在dashboard中，静态的页面使用server component，动态的页面使用client component
+  return (
+    <html lang="en" className={`${GeistSans.variable}`}>
+      <body>
+        <SessionProvider session={session}>
+          <TRPCReactProvider>
+            <AntdRegistry>
+              <ConfigProvider theme={isDarkMode ? darkTheme : defaultTheme}>
+                <div className="flex min-h-screen flex-col">
+                  {/* 在根layout中使用session 传递到组件中，就不会有先加载组件，再调整状态时产生的闪烁问题了 */}
+                  <main className="flex-grow">{children}</main>
+                </div>
+              </ConfigProvider>
+            </AntdRegistry>
+          </TRPCReactProvider>
+        </SessionProvider>
+      </body>
+    </html>
+  );
 }
