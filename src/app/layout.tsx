@@ -4,7 +4,11 @@ import { GeistSans } from 'geist/font/sans';
 import { type Metadata } from 'next';
 import { SessionProvider } from 'next-auth/react';
 import { TRPCReactProvider } from '@/trpc/react';
-import Navbar from '@/app/components/Navbar';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { ConfigProvider } from 'antd';
+import darkTheme from '@/theme/darkTheme';
+import defaultTheme from '@/theme/themeConfig';
+import Layout from '@/app/dashboard/components/layout';
 
 export const metadata: Metadata = {
   title: 'Create T3 App',
@@ -17,13 +21,18 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const isDarkMode = true;
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <SessionProvider>
           <TRPCReactProvider>
-            <Navbar />
-            {children}
+            <AntdRegistry>
+              <ConfigProvider theme={isDarkMode ? darkTheme : defaultTheme}>
+                {/* {children} */}
+                <Layout/>
+              </ConfigProvider>
+            </AntdRegistry>
           </TRPCReactProvider>
         </SessionProvider>
       </body>
