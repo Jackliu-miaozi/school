@@ -25,7 +25,7 @@ export default function NewsPage() {
             {post.imageUrl && (
               <div className="relative h-48 w-full">
                 <Image
-                  src={post.imageUrl as string}
+                  src={post.imageUrl}
                   alt={post.name}
                   fill
                   className="object-cover"

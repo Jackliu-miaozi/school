@@ -1,10 +1,14 @@
 'use client';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-export default function Navbar() {
-  const { data: session } = useSession();
+import { useSession } from 'next-auth/react';
+//要在组件中使用useSession() 获取上下文，才能让这个组件增购自动转变状态，尤其是在登录后，自动转变状态。
+
+
+//在根layout中使用session 传递到组件中，就不会有先加载组件，再调整状态时产生的闪烁问题了
+
+  export default function Navbar() {
   //和const session = await auth() 效果一样
   //但是useSession() 是客户端组件
   //useSession() 返回一个包含 session 和 status 的对象
@@ -13,6 +17,7 @@ export default function Navbar() {
   //useSession() 是客户端组件，所以不能在服务器端使用
   //auth（）是服务器端组件，所以可以在服务器端使用
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   return (
     <nav className="relative left-0 right-0 top-0 bg-gray-900 backdrop-blur-sm">
