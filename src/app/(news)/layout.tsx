@@ -1,6 +1,5 @@
 import '@/styles/globals.css';
 
-import { GeistSans } from 'geist/font/sans';
 import { type Metadata } from 'next';
 import { SessionProvider } from 'next-auth/react';
 import { TRPCReactProvider } from '@/trpc/react';
@@ -8,7 +7,6 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ConfigProvider } from 'antd';
 import darkTheme from '@/theme/darkTheme';
 import defaultTheme from '@/theme/themeConfig';
-import Navbar from '@/app/components/Navbar';
 import { auth } from '@/server/auth';
 
 export const metadata: Metadata = {
@@ -25,8 +23,7 @@ export default async function RootLayout({
   const isDarkMode = 0;
   const session = await auth();
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
-      <body>
+      <>
         <SessionProvider session={session}>
           <TRPCReactProvider>
             <AntdRegistry>
@@ -39,7 +36,6 @@ export default async function RootLayout({
             </AntdRegistry>
           </TRPCReactProvider>
         </SessionProvider>
-      </body>
-    </html>
+      </>
   );
 }
