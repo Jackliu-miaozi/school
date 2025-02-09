@@ -26,7 +26,12 @@ const Post: React.FC<PostProps> = ({
       <p>{content}</p>
       <p>{date}</p>
       <p>{category}</p>
-      <Image src={imageUrl} alt={title} width={500} height={500} />
+      <Image
+        src={imageUrl}
+        alt={title}
+        width={500}
+        height={500}
+      />
     </div>
   );
 };

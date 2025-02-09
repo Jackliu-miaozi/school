@@ -12,7 +12,9 @@ interface NavbarProps {
   session: Session | null;
 }
 
-export default function Navbar({ session }: NavbarProps) {
+export default function Navbar({
+  session,
+}: NavbarProps) {
   //和const session = await auth() 效果一样
   //但是useSession() 是客户端组件
   //useSession() 返回一个包含 session 和 status 的对象
@@ -27,9 +29,19 @@ export default function Navbar({ session }: NavbarProps) {
         <div className="flex h-16 items-center justify-between">
           {/* Logo 区域 */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center gap-2">
-              <Image src="/logo.png" alt="青州一中" width={40} height={40} />
-              <span className="text-2xl font-bold text-white">青州一中</span>
+            <Link
+              href="/"
+              className="flex items-center gap-2"
+            >
+              <Image
+                src="/logo.png"
+                alt="青州一中"
+                width={40}
+                height={40}
+              />
+              <span className="text-2xl font-bold text-white">
+                青州一中
+              </span>
             </Link>
           </div>
 

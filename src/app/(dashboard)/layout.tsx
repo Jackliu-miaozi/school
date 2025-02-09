@@ -1,4 +1,5 @@
 import '@/styles/globals.css';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
 
 import { type Metadata } from 'next';
 
@@ -15,10 +16,14 @@ export default async function RootLayout({
 }) {
   return (
     <>
-      <div className="flex min-h-screen flex-col">
-        {/* 在根layout中使用session 传递到组件中，就不会有先加载组件，再调整状态时产生的闪烁问题了 */}
-        <main className="flex-grow">{children}</main>
-      </div>
+      <AntdRegistry>
+        <div className="flex min-h-screen flex-col">
+          {/* 在根layout中使用session 传递到组件中，就不会有先加载组件，再调整状态时产生的闪烁问题了 */}
+          <main className="flex-grow">
+            {children}
+          </main>
+        </div>
+      </AntdRegistry>
     </>
   );
 }

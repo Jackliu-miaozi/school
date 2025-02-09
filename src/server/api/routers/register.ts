@@ -1,7 +1,10 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { hash } from 'bcryptjs';
-import { createTRPCRouter, publicProcedure } from '@/server/api/trpc';
+import {
+  createTRPCRouter,
+  publicProcedure,
+} from '@/server/api/trpc';
 
 export const registerRouter = createTRPCRouter({
   register: publicProcedure
@@ -13,9 +16,11 @@ export const registerRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const exists = await ctx.db.user.findUnique({
-        where: { email: input.email },
-      });
+      const exists = await ctx.db.user.findUnique(
+        {
+          where: { email: input.email },
+        },
+      );
 
       if (exists) {
         throw new TRPCError({
@@ -24,7 +29,10 @@ export const registerRouter = createTRPCRouter({
         });
       }
 
-      const hashedPassword = await hash(input.password, 12);
+      const hashedPassword = await hash(
+        input.password,
+        12,
+      );
 
       return ctx.db.user.create({
         data: {

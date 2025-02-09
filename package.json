@@ -46,6 +46,7 @@
     "resend": "^4.1.1",
     "server-only": "^0.0.1",
     "superjson": "^2.2.1",
+    "svg-captcha": "^1.4.0",
     "zod": "^3.23.3"
   },
   "devDependencies": {

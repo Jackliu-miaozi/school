@@ -7,7 +7,10 @@
  * need to use are documented accordingly near the end.
  */
 
-import { initTRPC, TRPCError } from '@trpc/server';
+import {
+  initTRPC,
+  TRPCError,
+} from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 
@@ -26,7 +29,9 @@ import { db } from '@/server/db';
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
+export const createTRPCContext = async (opts: {
+  headers: Headers;
+}) => {
   const session = await auth();
 
   return {
@@ -43,26 +48,31 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-const t = initTRPC.context<typeof createTRPCContext>().create({
-  transformer: superjson,
-  errorFormatter({ shape, error }) {
-    return {
-      ...shape,
-      data: {
-        ...shape.data,
-        zodError:
-          error.cause instanceof ZodError ? error.cause.flatten() : null,
-      },
-    };
-  },
-});
+const t = initTRPC
+  .context<typeof createTRPCContext>()
+  .create({
+    transformer: superjson,
+    errorFormatter({ shape, error }) {
+      return {
+        ...shape,
+        data: {
+          ...shape.data,
+          zodError:
+            error.cause instanceof ZodError
+              ? error.cause.flatten()
+              : null,
+        },
+      };
+    },
+  });
 
 /**
  * Create a server-side caller.
  *
  * @see https://trpc.io/docs/server/server-side-calls
  */
-export const createCallerFactory = t.createCallerFactory;
+export const createCallerFactory =
+  t.createCallerFactory;
 
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
@@ -84,26 +94,33 @@ export const createTRPCRouter = t.router;
  * You can remove this if you don't like it, but it can help catch unwanted waterfalls by simulating
  * network latency that would occur in production but not in local development.
  */
-const timingMiddleware = t.middleware(async ({ next, path }) => {
-  //{next,path}对中间件上下文的解构
-  //不需要使用不需要通过 context.next, context.path 访问
-  //这种写法比较简洁
-  const start = Date.now();
+const timingMiddleware = t.middleware(
+  async ({ next, path }) => {
+    //{next,path}对中间件上下文的解构
+    //不需要使用不需要通过 context.next, context.path 访问
+    //这种写法比较简洁
+    const start = Date.now();
 
-  if (t._config.isDev) {
-    // artificial delay in dev
-    const waitMs = Math.floor(Math.random() * 400) + 100;
-    await new Promise((resolve) => setTimeout(resolve, waitMs));
-  }
+    if (t._config.isDev) {
+      // artificial delay in dev
+      const waitMs =
+        Math.floor(Math.random() * 400) + 100;
+      await new Promise((resolve) =>
+        setTimeout(resolve, waitMs),
+      );
+    }
 
-  const result = await next();
-  //next表示执行下一个中间件或者执行最终的api处理程序
+    const result = await next();
+    //next表示执行下一个中间件或者执行最终的api处理程序
 
-  const end = Date.now();
-  console.log(`[TRPC] ${path} took ${end - start}ms to execute`);
-  //path表示当前请求的路径user.getProfile took 123ms to execute或post.create
-  return result;
-});
+    const end = Date.now();
+    console.log(
+      `[TRPC] ${path} took ${end - start}ms to execute`,
+    );
+    //path表示当前请求的路径user.getProfile took 123ms to execute或post.create
+    return result;
+  },
+);
 
 /**
  * Public (unauthenticated) procedure
@@ -112,7 +129,9 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure.use(timingMiddleware);
+export const publicProcedure = t.procedure.use(
+  timingMiddleware,
+);
 //t.procedure 创建一个tRPC procedure
 //.use(timingMiddleware) 将timingMiddleware中间件应用到procedure
 //使用timingMiddleware中间件，可以测量每个procedure的执行时间
@@ -130,12 +149,17 @@ export const protectedProcedure = t.procedure
   .use(({ ctx, next }) => {
     if (!ctx.session || !ctx.session.user) {
       //上下文中已经包含了session所以可以用来新建一个protectedProcedure
-      throw new TRPCError({ code: 'UNAUTHORIZED' });
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+      });
     }
     return next({
       ctx: {
         // infers the `session` as non-nullable
-        session: { ...ctx.session, user: ctx.session.user },
+        session: {
+          ...ctx.session,
+          user: ctx.session.user,
+        },
       },
       //重构ctx，以便在后续可以安全的使用user
       //...ctx是展开所有的session项
