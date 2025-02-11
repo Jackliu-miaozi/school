@@ -1,34 +1,44 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
-import { useState } from 'react';
-import {
-  useRouter,
-  useSearchParams,
-} from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { api } from '@/trpc/react';
 
 export default function LoginPage() {
+  const { data } = api.captcha.getCaptcha.useQuery();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo =
-    searchParams.get('redirectTo');
+  const redirectTo = searchParams.get('redirectTo');
   //如果redirectTo的值存在就获取他的值，如果不存在就是null。
 
   const [formData, setFormData] = useState({
     email: '',
     password: '',
+    captcha: '',
   });
   const [error, setError] = useState('');
+  const [captchaSvg, setCaptchaSvg] = useState('');
 
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>,
-  ) => {
+  const fetchCaptcha = () => {
+    if (data) {
+      const svgContent = data.image;
+      setCaptchaSvg(svgContent);
+    }
+  };
+
+  // useEffect(() => {
+  //   fetchCaptcha();
+  // }, []);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const result = await signIn('credentials', {
         email: formData.email,
         password: formData.password,
+        captcha: formData.captcha,
         redirect: false,
         callbackUrl: redirectTo ?? '/',
       });
@@ -54,25 +64,13 @@ export default function LoginPage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#ffffff] to-[#f3f4f6]">
       <div className="w-full max-w-md space-y-8 rounded-lg bg-white p-6 shadow-lg">
         <div>
-          <h2 className="text-center text-3xl font-bold text-gray-900">
-            登录
-          </h2>
+          <h2 className="text-center text-3xl font-bold text-gray-900">登录</h2>
         </div>
-        <form
-          className="mt-8 space-y-6"
-          onSubmit={handleSubmit}
-        >
-          {error && (
-            <div className="rounded-md bg-red-100 p-3 text-red-600">
-              {error}
-            </div>
-          )}
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {error && <div className="rounded-md bg-red-100 p-3 text-red-600">{error}</div>}
           <div className="space-y-4 rounded-md shadow-sm">
             <div>
-              <label
-                htmlFor="email"
-                className="sr-only"
-              >
+              <label htmlFor="email" className="sr-only">
                 邮箱地址
               </label>
               <input
@@ -93,10 +91,7 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <label
-                htmlFor="password"
-                className="sr-only"
-              >
+              <label htmlFor="password" className="sr-only">
                 密码
               </label>
               <input
@@ -116,6 +111,33 @@ export default function LoginPage() {
                 }
               />
             </div>
+            <div className="flex gap-2">
+              <div className="flex-1">
+                <label htmlFor="captcha" className="sr-only">
+                  验证码
+                </label>
+                <input
+                  id="captcha"
+                  name="captcha"
+                  type="text"
+                  required
+                  className="relative block w-full rounded-md border border-gray-200 p-2 text-gray-900 focus:border-indigo-500 focus:ring-indigo-500"
+                  placeholder="验证码"
+                  value={formData.captcha}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      captcha: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div
+                className="flex h-10 w-32 cursor-pointer items-center justify-center rounded border"
+                onClick={fetchCaptcha}
+                dangerouslySetInnerHTML={{ __html: captchaSvg }}
+              />
+            </div>
           </div>
 
           <div>
@@ -128,10 +150,7 @@ export default function LoginPage() {
           </div>
         </form>
         <div className="text-center">
-          <Link
-            href="/register"
-            className="font-medium text-indigo-600 hover:text-indigo-500"
-          >
+          <Link href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
             没有账号？点击注册
           </Link>
         </div>

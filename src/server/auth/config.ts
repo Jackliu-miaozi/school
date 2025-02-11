@@ -1,3 +1,4 @@
+import svgCaptcha from 'svg-captcha';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import {
   type DefaultSession,
@@ -6,6 +7,8 @@ import {
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
+import { auth } from '@/server/auth';
+
 
 import { db } from '@/server/db';
 
@@ -24,6 +27,7 @@ declare module 'next-auth' {
     } & DefaultSession['user'];
     //DefaultSession 是 next-auth 提供的默认 session 类型
     //使session拓展了DefaultSession的user属性
+    captcha:string;
   }
 
   // interface User {
@@ -37,6 +41,23 @@ declare module 'next-auth' {
  *
  * @see https://next-auth.js.org/configuration/options
  */
+const validateCaptcha = async (inputCaptcha: string): Promise<boolean> => {
+  try {
+    const session = await auth();
+    // 验证session是否存在以及是否包含验证码
+    if (!session?.captcha) {
+      //如果session中不存在captcha
+      console.log('未正确生成captcha');
+      return false;
+    }
+    // 不区分大小写比较验证码
+    return inputCaptcha.toLowerCase() === session.captcha.toLowerCase();
+  } catch (error) {
+    console.error('验证码验证失败:', error);
+    return false;
+  }
+};
+
 export const authConfig = {
   pages: {
     signIn: '/login', // 自定义登录页面路径
@@ -54,32 +75,34 @@ export const authConfig = {
           label: 'Password',
           type: 'password',
         },
+        captcha: {
+          label: 'Captcha',
+          type: 'text',
+        },
       },
       async authorize(credentials) {
         const parsedCredentials = z
           .object({
             email: z.string().email(),
             password: z.string().min(6),
+            captcha: z.string().length(4),
           })
-          //验证是否为有效的邮件格式
-          //验证密码是否至少为6个字符
           .safeParse(credentials);
-        //如果验证成功parsedCredentials.success为true 的值将为true否则将为false
-        if (!parsedCredentials.success)
-          return null;
 
-        const { email, password } =
-          parsedCredentials.data;
+        if (!parsedCredentials.success) return null;
 
-        //使用parsedCredentials.data可以得到验证后的数据
+        const { email, password, captcha } = parsedCredentials.data;
+
+        // 验证验证码是否正确
+        // 这里需要根据您的具体实现来验证验证码
+        // 例如，从 session 中获取正确的验证码进行比对
+        const isValidCaptcha = await validateCaptcha(captcha);
+        if (!isValidCaptcha) return null;
+
         const user = await db.user.findUnique({
           where: { email },
         });
-        //使用await db.user.findUnique({ where: { email } }) 查询数据库中是否存在具有给定电子邮件的用户
-        //如果用户存在，则将用户数据存储在user变量中
-        //如果用户不存在，则将user设置为null
         if (!user?.password) return null;
-        //如果用户不存在密码，则返回null
 
         const passwordsMatch =
           await bcrypt.compare(
@@ -87,7 +110,7 @@ export const authConfig = {
             user.password,
           );
         if (!passwordsMatch) return null;
-        //如果密码不匹配，则返回null
+
         return {
           id: user.id,
           name: user.name,
