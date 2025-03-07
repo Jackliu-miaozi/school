@@ -1,5 +1,7 @@
 import { postRouter } from '@/server/api/routers/post';
 import { registerRouter } from '@/server/api/routers/register';
+// import { captchaRouter } from '@/server/api/routers/captcha';
+
 import {
   createCallerFactory,
   createTRPCRouter,
@@ -13,6 +15,7 @@ import {
 export const appRouter = createTRPCRouter({
   post: postRouter,
   register: registerRouter,
+  // captcha: captchaRouter,
 });
 //createTRPCRouter 创建一个tRPC路由器
 //appRouter 是包含所有路由器的根路由器

@@ -84,11 +84,11 @@ export default function Navbar2({
 
           {/* 导航链接 */}
           <div
-            className={`md:flex md:items-center md:border-l ${isNavOpen ? 'grid grid-cols-3' : 'hidden'} absolute left-0 right-0 z-50 mx-4 mt-2  rounded-lg border border-gray-200/50 bg-white/80 shadow-lg backdrop-blur-md transition-all duration-200 ease-in-out md:relative md:mx-0 md:mt-0 md:divide-x-0 md:border-none md:bg-transparent md:shadow-none`}
+            className={`md:flex md:items-center md:border-l ${isNavOpen ? 'grid grid-cols-3' : 'hidden'} absolute left-0 right-0 z-50 mx-4 mt-2 rounded-lg border border-gray-200/50 bg-white/80 shadow-lg backdrop-blur-md transition-all duration-200 ease-in-out md:relative md:mx-0 md:mt-0 md:divide-x-0 md:border-none md:bg-transparent md:shadow-none`}
           >
             <Link
               href="/news"
-              className={` border md:border-l px-4 py-2 text-center text-gray-800 hover:bg-gray-200/50 hover:text-blue-500 md:text-left md:hover:bg-transparent ${pathname === '/news' ? 'text-blue-500' : ''}`}
+              className={`border px-4 py-2 text-center text-gray-800 hover:bg-gray-200/50 hover:text-blue-500 md:border-l md:text-left md:hover:bg-transparent ${pathname === '/news' ? 'text-blue-500' : ''}`}
               onClick={() => setIsNavOpen(false)}
             >
               校内新闻

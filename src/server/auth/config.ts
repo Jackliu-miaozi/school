@@ -24,6 +24,7 @@ declare module 'next-auth' {
     } & DefaultSession['user'];
     //DefaultSession 是 next-auth 提供的默认 session 类型
     //使session拓展了DefaultSession的user属性
+    captcha?: string;
   }
 
   // interface User {

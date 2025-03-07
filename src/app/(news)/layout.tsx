@@ -1,7 +1,7 @@
 import '@/styles/globals.css';
 import { auth } from '@/server/auth';
 import Navbar2 from '@/app/components/Navbar2';
-import Footer from "@/app/components/Footer";
+import Footer from '@/app/components/Footer';
 
 import { type Metadata } from 'next';
 import { TRPCReactProvider } from '@/trpc/react';
@@ -27,7 +27,7 @@ export default async function RootLayout({
           <main className="flex-grow">
             {children}
           </main>
-          <Footer />  
+          <Footer />
         </div>
       </TRPCReactProvider>
     </>
